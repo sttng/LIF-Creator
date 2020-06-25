@@ -56,7 +56,7 @@ class LIFHeader:
 		return struct.unpack('>I', self.size)[0]
 	
 	def string(self):
-		out = self.magic + self.spacing1 + self.size + self.spacing2 + self.spacing3
+		out = b''.join([self.magic, self.spacing1, self.size, self.spacing2 + self.spacing3])
 		return out
 
 class LIFBlock:	
@@ -103,7 +103,7 @@ class LIFBlock:
 		return struct.unpack('>I', self.size)[0]
 
 	def string(self):
-		out = self.blockheader + self.blocktype + self.spacing1 + self.size + self.spacing2 + self.spacing3 + self.data
+		out = b''.join([self.blockheader, self.blocktype, self.spacing1, self.size, self.spacing2, self.spacing3, self.data])
 		return out
 		
 class LIFDirEntry:
@@ -126,7 +126,7 @@ class LIFDirEntry:
 		self.entries = struct.pack('>I',entries)	#The number of sub-entries (files and folders)
 
 	def string(self):
-		out = self.entrytype + self.rootind + self.name + self.spacing1 + self.size + self.entries
+		out = b''.join([self.entrytype, self.rootind, self.name, self.spacing1, self.size, self.entries])
 		return out
 
 
@@ -154,7 +154,7 @@ class LIFFileEntry:
 		self.accessed = b'\x01\xce\xec\xee\x85\x3b\x50\xdb' 	#Created, modified or accessed date
 
 	def string(self):
-		out = self.entrytype + self.unknwown + self.name + self.spacing1 + self.size +self.created + self.modified + self.accessed
+		out = b''.join([self.entrytype, self.unknwown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed])
 		return out
 
 
