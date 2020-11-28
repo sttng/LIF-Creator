@@ -144,7 +144,7 @@ class LIFFileEntry:
 
 	def __init__(self, name, size):
 		self.entrytype = struct.pack('>H', 2)		#Entry type (equals 2)
-		self.unknwown = struct.pack('>I', 7)		#Spacing/unknown value (0 or 7).
+		self.unknown = struct.pack('>I', 7)		#Spacing/unknown value (0 or 7).
 		self.name = b'\x00' + name.encode('utf-16')[2:] + b'\x00'
 		self.spacing1 = struct.pack('>I', 0)		#Spacing (Always equals 0)
 		self.size = struct.pack('>I', size)		#File size (it is actually the block size because it includes the block header size (20))
@@ -153,18 +153,19 @@ class LIFFileEntry:
 		self.accessed = b'\x01\xce\xec\xee\x85\x3b\x50\xdb' 	#Created, modified or accessed date
 
 	def string(self):
-		out = b''.join([self.entrytype, self.unknwown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed])
+		out = b''.join([self.entrytype, self.unknown, self.name, self.spacing1, self.size, self.created, self.modified, self.accessed])
 		return out
 
 
 def createLif(walk_dir):
+	walk_dir = os.path.normpath(walk_dir) + os.sep
 	outfile = os.path.basename(os.path.normpath(walk_dir))
 	number_of_files = 0
 	number_of_subdirs = 0
-	print('LIF Creator 1.1')
+	print('LIF Creator 1.2')
 	print('Choosen directory: {0}'.format(os.path.normpath(walk_dir)))
 	
-	#Create the first non-existant file to write to.
+	#Create the first non-existant file to write to. Don't overwwrite an existing file
 	if os.path.exists(outfile + '.lif'):
 		i = 1
 		while(os.path.exists(outfile + "_" + str(i) + '.lif')):
@@ -246,4 +247,4 @@ if(len(sys.argv) > 1):
 	for i in range(1, len(sys.argv)):
 		createLif(sys.argv[i])
 else:
-	print("LIF Creator 1.1\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t" + runCommand + " <FILE_PATHS>")
+	print("LIF Creator 1.2\n\nThis program will create LIF archives from an adjacent folder.\n\nCOPYRIGHT:\n\t(C) 2020 sttng\n\nLICENSE:\n\tGNU GPLv3\n\tYou accept full responsibility for how you use this program.\n\nUSEAGE:\n\t LIFCreator <FOLDER_PATH>")
